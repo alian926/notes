@@ -9,17 +9,24 @@
     <div id="app">
         <h1 v-on:click="handleClick">{{msg}}</h1>
         <input v-model="msg"/>
+        <button @click="buttonClick">@buttonClick</button>
     </div>
     <script src="./simple-vue.js"></script>
     <script>
         const vm = new Vue({
             el: '#app',
             data: {
-                msg: 'this is msg'
+                msg: 'this is msg',
+                id: 1
             },
             methods: {
                 handleClick() {
+                    this.msg = Math.random()
                     console.log('click :', this.msg)
+                },
+                buttonClick() {
+                    this.msg = 'button click' + this.id++
+                    console.log('button click :', this.msg)
                 }
             },
         })

@@ -121,12 +121,20 @@ class Compiler {
                 const [compileKey, eventName] = directve.split(':')
                 // 这个value其实是获取到的vm.$data上的键值, 可能是字符串也可能是表达式,如三目运算符
                 utils[compileKey](node, value, this.vm, eventName)
+            } else if (this.isEventName(name)) {
+                // @click=""
+                const [, eventName] = name.split('@');
+                utils['on'](node, value, this.vm, eventName);
             }
         })
     }
 
     isDirect(name) {
-        return name.startsWith('v-')
+        return name.startsWith('v-');
+    }
+
+    isEventName(name) {
+        return name.startsWith('@');
     }
 
     compileText(node) {
@@ -198,9 +206,9 @@ class Vue {
         this.$options = options;
 
         new Observer(this.$data);
-        
+
         this.proxyMethods(this.$methods);
-        
+
         this.proxyData(this.$data);
 
         new Compiler(this.$el, this);
