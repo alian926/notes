@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin="anonymous" integrity="sha512-YXLGLsQBiwHPHLCAA9npZWhADUsHECjkZ71D1uzT2Hpop82/eLnmFb6b0jo8pK4T0Au0g2FETrRJNblF/46ZzQ==" src="http://lib.baomitu.com/vue/2.6.12/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-for="item in list" :key="item.name" @click="handleClickItem(item)">{{item.name}}: {{item.text}}</div>
+        <button @click="handleClickButton">点击增加</button>
+    </div>
+    <script>
+        const app = new Vue({
+            el:'#app',
+            data: {
+                list:[],
+                id:1,
+            },
+            methods: {
+                handleClickButton() {
+                    // 为什么在点击增加的时候, 会触发之前的watcher, 并没有修改之前的数组对象呀
+                    // push方法被vue重写,执行的时候会通知数组收集到的watcher进行更新,
+                    // watcher实例会首先会被list收集到, 然后才被下标0收集到
+                    this.list.push({
+                        name: this.id++,
+                        text: new Date(),
+                    })
+                    this.$watch(`list.${this.list.length - 1}`, (val)=> {
+                        console.log('点击更改的对象下标:', this.list.indexOf(val))
+                    },{
+                        deep:true
+                    })
+                },
+                handleClickItem(item) {
+                    item.text = new Date()
+                }
+            }
+        })
+    </script>
+</body>
+</html>
