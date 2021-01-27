@@ -41,6 +41,7 @@ app.use(async (ctx, next) => {
 
 // routes
 // 路由,本身叶总中间件,应位于独立目录routes下面
+// index.routes() 是router对象上挂载的所有中间件,每个中间件都是一个子路由
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 
